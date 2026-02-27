@@ -251,8 +251,9 @@ function TeacherDashboard() {
         if (!socket) return;
 
         socket.on('current_state', (state) => {
+            // Only restore live view if a poll is actively running.
+            // Ended polls are not restored so new tabs always open on the fresh form.
             if (state.active) { setPollState(state); setView('live'); }
-            else if (state.poll?.status === 'ended') { setPollState(state); setView('live'); }
         });
         socket.on('start_poll', (state) => { setPollState(state); setView('live'); });
         socket.on('poll_update', ({ voteCounts }) => {
