@@ -11,11 +11,14 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
+// allow the deployed frontend to connect (falls back to * for local dev)
+const allowedOrigin = process.env.CLIENT_URL || '*';
+
 const io = new Server(httpServer, {
-    cors: { origin: '*' }
+    cors: { origin: allowedOrigin, methods: ['GET', 'POST'] }
 });
 
-app.use(cors());
+app.use(cors({ origin: allowedOrigin }));
 app.use(express.json());
 
 // REST routes for polls
